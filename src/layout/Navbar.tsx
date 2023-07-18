@@ -12,7 +12,15 @@ import jwt_decode from "jwt-decode";
 export default function Navbar() {
   const user = useAppSelector((state) => state.user);
 
-  const decodedToken: any = jwt_decode(user.accessToken!);
+  // const decodedToken: any = jwt_decode(user.accessToken | null);
+  const decodedToken: any = isStringNonNull(user.accessToken)
+    ? jwt_decode(user.accessToken)
+    : null;
+
+  // Type guard to check if a value is a non-null string
+  function isStringNonNull(value: any): value is string {
+    return typeof value === "string" && value !== null;
+  }
   const email = decodedToken.userEmail;
 
   const navigate = useNavigate();

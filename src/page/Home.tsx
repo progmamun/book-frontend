@@ -1,3 +1,7 @@
+/*eslint-disable @typescript-eslint/no-unsafe-assignment*/
+/*eslint-disable @typescript-eslint/no-unsafe-call*/
+/*eslint-disable @typescript-eslint/no-unsafe-member-access*/
+
 import { Link } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import Footer from "../layout/Footer";
