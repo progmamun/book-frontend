@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaRegHeart } from "react-icons/fa";
+import { FaBook, FaRegHeart } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
 
 export default function Navbar() {
@@ -8,17 +8,10 @@ export default function Navbar() {
       <div className="navbar bg-base-100">
         <div className="flex-1">
           <Link to="/" className="text-xl">
-            Book
+            Book Catalog <FaBook className="inline-block"></FaBook>
           </Link>
         </div>
         <div className="flex-none gap-2">
-          <div className="form-control">
-            <input
-              type="text"
-              placeholder="Search"
-              className="input input-bordered w-24 md:w-auto"
-            />
-          </div>
           <ul className="menu menu-horizontal px-1">
             <li>
               <Link to="/all-book">All Book</Link>
@@ -38,7 +31,7 @@ export default function Navbar() {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                <img src="https://cdn-icons-png.flaticon.com/512/727/727399.png?w=740&t=st=1689648803~exp=1689649403~hmac=8221da22c9670528695687067141c28c1883ebdb1aebeb0124806842e22c3328" />
               </div>
             </label>
             <ul

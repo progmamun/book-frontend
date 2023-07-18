@@ -1,7 +1,13 @@
+import HeroSection from "../components/HeroSection";
+import RecentBookCard from "../components/RecentBookCard";
+import Footer from "../layout/Footer";
+
 export default function Home() {
   return (
     <>
-      <h1>home</h1>
+      <HeroSection></HeroSection>
+      <RecentBookCard></RecentBookCard>
+      <Footer></Footer>
     </>
   );
 }
