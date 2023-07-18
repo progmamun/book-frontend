@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import { FaBook, FaRegHeart } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
+import { useAppSelector } from "../redux/hook";
+import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/features/user/userSlice";
 
 export default function Navbar() {
+  const { email } = useAppSelector((state) => state.users.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(setUser(null));
+    Cookies.remove("token");
+  };
   return (
     <nav>
       <div className="navbar bg-base-100">
@@ -16,6 +27,11 @@ export default function Navbar() {
             <li>
               <Link to="/all-book">All Book</Link>
             </li>
+            {email && (
+              <li>
+                <Link to="/add-new-book">Add New</Link>
+              </li>
+            )}
             <li>
               <Link to="/my-reading">
                 <GiNotebook></GiNotebook>
@@ -39,23 +55,29 @@ export default function Navbar() {
               className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
             >
               <li>
-                <a className="justify-between">Profile</a>
-              </li>
-              <li>
                 <a className="justify-between">Wishlist</a>
               </li>
               <li>
                 <a className="justify-between">My Reading</a>
               </li>
-              <li>
-                <Link to="/signup">Signup</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <a>Logout</a>
-              </li>
+
+              {email && (
+                <li className="block px-4 py-2 text-sm font-bold hover:bg-gray-100">
+                  {email}
+                </li>
+              )}
+              {email ? (
+                <li onClick={handleLogout}>Sign Out</li>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/signup">Sign Up</Link>
+                  </li>
+                  <li>
+                    <Link to="/login">Log In</Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

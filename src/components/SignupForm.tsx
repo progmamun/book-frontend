@@ -1,75 +1,146 @@
-import { Link } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { useSignUpMutation } from "../redux/features/user/usersApi";
+import { setLoading } from "../redux/features/user/userSlice";
+import { toast } from "react-toastify";
+import { FaBook } from "react-icons/fa";
 
 export default function SignupForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { isLoading } = useAppSelector((state) => state.users);
+  const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
+
+  const [signUpMutation] = useSignUpMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const credential = { email, password };
+      dispatch(setLoading(true));
+      const response: any = await signUpMutation(credential);
+
+      if (response.data) {
+        toast.success(response?.data?.message ? "" : "success");
+        navigate("/login");
+        setEmail("");
+        setPassword("");
+      } else {
+        toast.error(response?.error?.data?.message ? "" : "error");
+      }
+      dispatch(setLoading(false));
+    } catch (error: any) {
+      toast.error("Sign-up failed:", error);
+      dispatch(setLoading(false));
+    }
+  };
+
   return (
     <>
-      <div className="bg-grey-lighter min-h-screen flex flex-col">
-        <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-          <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-            <Link to="/">
-              <h1 className="mb-8 text-3xl text-center">Sign up</h1>
-            </Link>
-            <input
-              type="text"
-              className="block border border-grey-light w-full p-3 rounded mb-4"
-              name="fullName"
-              placeholder="Full Name"
-            />
+      {/* <Helmet>
+        <title>Create Account | Book</title>
+      </Helmet> */}
 
-            <input
-              type="text"
-              className="block border border-grey-light w-full p-3 rounded mb-4"
-              name="email"
-              placeholder="Email"
-            />
-
-            <input
-              type="password"
-              className="block border border-grey-light w-full p-3 rounded mb-4"
-              name="password"
-              placeholder="Password"
-            />
-            <input
-              type="password"
-              className="block border border-grey-light w-full p-3 rounded mb-4"
-              name="confirm_password"
-              placeholder="Confirm Password"
-            />
-
-            <button
-              type="submit"
-              className="w-full text-center py-3 rounded text-black bg-green-500 hover:bg-green-dark focus:outline-none my-1"
-            >
-              Create Account
-            </button>
-
-            <div className="text-center text-sm text-grey-dark mt-4">
-              By signing up, you agree to the
-              <a
-                className="no-underline border-b border-grey-dark text-grey-dark"
-                href="#"
-              >
-                Terms of Service
-              </a>
-              and
-              <a
-                className="no-underline border-b border-grey-dark text-grey-dark"
-                href="#"
-              >
-                Privacy Policy
-              </a>
+      <div
+        className="min-h-screen flex items-center justify-center bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url(https://images.unsplash.com/photo-1573219093925-cea25da23f54?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80)",
+        }}
+      >
+        <div className="bg-white w-[800px] shadow-md rounded-lg p-8 flex">
+          <div className="w-1/2 flex items-center justify-center">
+            <div>
+              <div className="text-center mb-4">
+                <Link to="/">
+                  <img
+                    height="65px"
+                    width="65px"
+                    className="mx-auto"
+                    src="https://thumbs.dreamstime.com/z/hand-book-logo-illustration-art-background-43965136.jpg?w=576"
+                    alt="logo"
+                  />
+                </Link>
+              </div>
+              <p className="text-center text-gray-700 text-lg mb-4">
+                <Link to="/" className="text-xl font-black">
+                  Book Catalog <FaBook className="inline-block"></FaBook>
+                </Link>
+              </p>
             </div>
           </div>
-
-          <div className="text-grey-dark mt-6">
-            Already have an account?
-            <Link
-              className="no-underline border-b border-blue text-blue"
-              to="/login/"
-            >
-              Log in
-            </Link>
-            .
+          <div className="w-1/2">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+              Create an Account
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label
+                  htmlFor="email"
+                  className="block text-gray-700 text-sm font-semibold mb-2"
+                >
+                  Email
+                </label>
+                <input
+                  onChange={(e) => setEmail(e.target.value)}
+                  defaultValue={email}
+                  type="email"
+                  id="email"
+                  className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 text-sm font-semibold mb-2"
+                >
+                  Password
+                </label>
+                <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  defaultValue={password}
+                  type="password"
+                  id="password"
+                  className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+              {isLoading ? (
+                <button
+                  disabled
+                  className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition-colors"
+                >
+                  Loading...
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition-colors"
+                >
+                  Sign Up
+                </button>
+              )}
+              <p className="text-gray-700 text-md mt-4">
+                Already have an account?{" "}
+                <Link to="/login">
+                  <a className="text-indigo-500 font-semibold hover:text-indigo-700">
+                    Sign In
+                  </a>
+                </Link>
+              </p>
+            </form>
           </div>
         </div>
       </div>
