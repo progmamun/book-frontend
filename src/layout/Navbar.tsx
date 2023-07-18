@@ -28,7 +28,7 @@ export default function Navbar() {
             <li>
               <Link to="/all-book">All Book</Link>
             </li>
-            {user && (
+            {user.email && (
               <li>
                 <Link to="/add-new-book">Add New</Link>
               </li>

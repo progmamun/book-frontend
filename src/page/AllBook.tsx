@@ -25,7 +25,7 @@ export default function AllBook() {
       <div className="grid grid-cols-3 gap-x-10 gap-y-10">
         {books?.data?.map((book: IBook, i: number) => {
           return (
-            <Link key={i} to={`/details/${book?.slug}`}>
+            <Link key={i} to={`/book-details/${book?.slug}`}>
               <BookCard book={book} />
             </Link>
           );

@@ -11,7 +11,11 @@ const booksApi = api.injectEndpoints({
         providesTags: ["addNewBook", "deleteBook"],
       }),
     }),
+    bookDetails: builder.query({
+      query: (slug: string) => `/book/${slug}`,
+      providesTags: ["bookDetails", "bookReview"],
+    }),
   }),
 });
 
-export const { useGetAllBookQuery } = booksApi;
+export const { useGetAllBookQuery, useBookDetailsQuery } = booksApi;
