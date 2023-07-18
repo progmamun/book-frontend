@@ -5,10 +5,19 @@ import Footer from "../layout/Footer";
 import { useGetRecentBooksQuery } from "../redux/features/book/bookApi";
 import { IBook } from "../types/globalTypes";
 import BookCard from "../components/BookCard";
+import { useEffect } from "react";
 
 export default function Home() {
   const { data, isLoading, isError } = useGetRecentBooksQuery({});
-  console.log(data);
+
+  useEffect(() => {
+    if (isLoading) {
+      <p>Loading.. please wait.!</p>;
+    }
+    if (isError) {
+      <p>something went wrong. please try to reload the page.!!</p>;
+    }
+  }, [isLoading, isError]);
 
   return (
     <>
@@ -20,7 +29,7 @@ export default function Home() {
         <div className="grid grid-cols-3 gap-x-10 gap-y-10">
           {data?.data?.map((book: IBook, i: number) => {
             return (
-              <Link key={i} to={`/details/${book.slug}`}>
+              <Link key={i} to={`/book-details/${book.slug}`}>
                 <BookCard book={book} />
               </Link>
             );

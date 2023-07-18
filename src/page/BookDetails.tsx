@@ -64,7 +64,7 @@ const BookDetails = () => {
           )}
           {user.id === data?.data?.authorId && (
             <div className="flex gap-3">
-              <Link className="btn btn-secondary" to={`/update-book/${slug}`}>
+              <Link className="btn btn-secondary" to={`/edit-book/${slug}`}>
                 Edit Book
               </Link>
               <button onClick={handleDelete} className="btn btn-warning">
