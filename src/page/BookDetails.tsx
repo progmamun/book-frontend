@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment*/
+/* eslint-disable @typescript-eslint/restrict-template-expressions*/
+/* eslint-disable @typescript-eslint/no-unsafe-member-access*/
+/* eslint-disable @typescript-eslint/no-floating-promises*/
+/* eslint-disable @typescript-eslint/no-unsafe-argument*/
+/* eslint-disable @typescript-eslint/no-unsafe-call*/
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -13,13 +20,13 @@ import jwt_decode from "jwt-decode";
 const BookDetails = () => {
   const user = useAppSelector((state) => state.user);
 
-  const decodedToken = jwt_decode(user.accessToken);
+  const decodedToken: any = jwt_decode(user.accessToken!);
   // console.log(decodedToken);
   const email = decodedToken.userEmail;
   console.log(email);
 
   const [review, setReview] = useState("");
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: any }>();
   const { data, isLoading } = useBookDetailsQuery(slug);
 
   const [deleteBook, { isSuccess }] = useDeleteBookMutation(data?.data?.slug);
@@ -46,12 +53,15 @@ const BookDetails = () => {
     setReview("");
   };
   useEffect(() => {
+    if (isLoading) {
+      <p>Loading...</p>;
+    }
     if (isSuccess) {
       toast.success("Book Deleted Successfully");
       navigate("/");
     }
     console.log(error);
-  }, [isSuccess, error, navigate]);
+  }, [isLoading, isSuccess, error, navigate]);
 
   return (
     <div className="container">

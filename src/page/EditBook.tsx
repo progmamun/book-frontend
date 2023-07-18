@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment*/
+/* eslint-disable @typescript-eslint/restrict-template-expressions*/
+/* eslint-disable @typescript-eslint/no-floating-promises*/
+/* eslint-disable @typescript-eslint/no-misused-promises*/
+/* eslint-disable @typescript-eslint/no-unsafe-member-access*/
+/* eslint-disable @typescript-eslint/no-unsafe-argument*/
+
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +23,7 @@ export default function EditBook() {
   const { register, handleSubmit } = useForm<FormValues>();
 
   const navigate = useNavigate();
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: any }>();
   const { data, isLoading, isError } = useBookDetailsQuery(slug);
 
   //   console.log(data);

@@ -3,7 +3,7 @@
 /* eslint-disable  @typescript-eslint/no-unsafe-assignment*/
 /* eslint-disable  @typescript-eslint/no-unsafe-member-access*/
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { useSignInMutation } from "../redux/features/user/usersApi";
@@ -38,7 +38,7 @@ export default function LoginForm() {
       dispatch(setUser(data.data));
       navigate("/");
     }
-  }, [isSuccess, navigate, user.accessToken, dispatch]);
+  }, [isSuccess, navigate, user.accessToken, dispatch, data.data]);
 
   return (
     <>

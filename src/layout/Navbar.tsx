@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment*/
 /* eslint-disable @typescript-eslint/restrict-template-expressions*/
+/* eslint-disable @typescript-eslint/no-unsafe-member-access*/
 
 import { Link, useNavigate } from "react-router-dom";
 import { FaBook, FaRegHeart } from "react-icons/fa";
@@ -11,7 +12,7 @@ import jwt_decode from "jwt-decode";
 export default function Navbar() {
   const user = useAppSelector((state) => state.user);
 
-  const decodedToken: unknown = jwt_decode(user.accessToken!);
+  const decodedToken: any = jwt_decode(user.accessToken!);
   const email = decodedToken.userEmail;
 
   const navigate = useNavigate();

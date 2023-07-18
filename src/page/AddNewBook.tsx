@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions*/
 /* eslint-disable @typescript-eslint/no-floating-promises*/
 /* eslint-disable @typescript-eslint/no-misused-promises*/
+/* eslint-disable @typescript-eslint/no-unsafe-member-access*/
 
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -22,7 +23,7 @@ type FormValues = {
 export default function AddNewBook() {
   const user = useAppSelector((state) => state.user);
 
-  const decodedToken: unknown = jwt_decode(user.accessToken!);
+  const decodedToken: any = jwt_decode(user.accessToken!);
   const email = decodedToken.userEmail;
 
   const { register, handleSubmit } = useForm<FormValues>();

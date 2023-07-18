@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
-import RecentBookCard from "../components/RecentBookCard";
 import Footer from "../layout/Footer";
 import { useGetRecentBooksQuery } from "../redux/features/book/bookApi";
 import { IBook } from "../types/globalTypes";
