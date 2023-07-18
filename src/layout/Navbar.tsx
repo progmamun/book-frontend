@@ -3,9 +3,13 @@ import { FaBook, FaRegHeart } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { logOut } from "../redux/features/user/userSlice";
+import jwt_decode from "jwt-decode";
 
 export default function Navbar() {
   const user = useAppSelector((state) => state.user);
+
+  const decodedToken = jwt_decode(user.accessToken);
+  const email = decodedToken.userEmail;
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -28,9 +32,9 @@ export default function Navbar() {
             <li>
               <Link to="/all-book">All Book</Link>
             </li>
-            {user.email && (
+            {email && (
               <li>
-                <Link to="/add-new-book">Add New</Link>
+                <Link to="/add-new-book">Add New Book</Link>
               </li>
             )}
             <li>
