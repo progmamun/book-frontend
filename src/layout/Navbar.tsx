@@ -1,18 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBook, FaRegHeart } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
-import { useAppSelector } from "../redux/hook";
-import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
-import { setUser } from "../redux/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { logOut } from "../redux/features/user/userSlice";
 
 export default function Navbar() {
-  const { email } = useAppSelector((state) => state.users.user);
-  const dispatch = useDispatch();
+  const user = useAppSelector((state) => state.user);
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    dispatch(setUser(null));
-    Cookies.remove("token");
+    localStorage.removeItem("user");
+    dispatch(logOut());
+    navigate("/login");
   };
   return (
     <nav>
@@ -27,7 +28,7 @@ export default function Navbar() {
             <li>
               <Link to="/all-book">All Book</Link>
             </li>
-            {email && (
+            {user && (
               <li>
                 <Link to="/add-new-book">Add New</Link>
               </li>
@@ -55,19 +56,18 @@ export default function Navbar() {
               className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
             >
               <li>
-                <a className="justify-between">Wishlist</a>
+                <a>Wishlist</a>
               </li>
               <li>
-                <a className="justify-between">My Reading</a>
+                <a>My Reading</a>
               </li>
-
-              {email && (
-                <li className="block px-4 py-2 text-sm font-bold hover:bg-gray-100">
-                  {email}
+              {user.accessToken ? (
+                <li
+                  onClick={handleLogout}
+                  className="cursor-pointer btn btn-sm"
+                >
+                  Log Out
                 </li>
-              )}
-              {email ? (
-                <li onClick={handleLogout}>Sign Out</li>
               ) : (
                 <>
                   <li>

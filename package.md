@@ -7,6 +7,7 @@
 - npm install react-router-dom
 - npm install @reduxjs/toolkit
 - npm install react-redux
+- npm install react-hook-form
 
 ---
 
@@ -17,3 +18,5 @@
 - npm i js-cookie
 - npm install --save @types/js-cookie
 - npm i jwt-decode
+- npm i jsonwebtoken
+- npm install --save @types/jsonwebtoken

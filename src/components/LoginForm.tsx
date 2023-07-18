@@ -1,51 +1,44 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable  @typescript-eslint/no-misused-promises*/
+/* eslint-disable  @typescript-eslint/no-floating-promises*/
+/* eslint-disable  @typescript-eslint/no-unsafe-assignment*/
+/* eslint-disable  @typescript-eslint/no-unsafe-member-access*/
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { useSignInMutation } from "../redux/features/user/usersApi";
-import { setLoading } from "../redux/features/user/userSlice";
-import { toast } from "react-toastify";
+import { setUser } from "../redux/features/user/userSlice";
 import { FaBook } from "react-icons/fa";
-import Cookies from "js-cookie";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const { isLoading } = useAppSelector((state) => state.users);
-  const dispatch = useAppDispatch();
+  const { register, handleSubmit } = useForm<FormValues>();
+  const user = useAppSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const [signInMutation] = useSignInMutation();
+  const [signIn, { isSuccess, data }] = useSignInMutation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const credential = { email, password };
-      dispatch(setLoading(true));
-      const response: any = await signInMutation(credential);
-      console.log(response);
-      if (response.data) {
-        // toast.success(response?.data?.message ? "":"success");
-        Cookies.set("token", response?.data?.token);
-        navigate("/");
-        setEmail("");
-        setPassword("");
-      } else {
-        toast.error(response?.error?.data?.message ? "" : "error");
-      }
-      dispatch(setLoading(false));
-    } catch (error: any) {
-      toast.error("Login-in failed:", error);
-      dispatch(setLoading(false));
-    }
+  const onSubmit: SubmitHandler<FormValues> = (formData) => {
+    signIn(formData);
   };
+
+  useEffect(() => {
+    if (user.accessToken) {
+      navigate("/");
+    }
+    if (isSuccess) {
+      localStorage.setItem("user", JSON.stringify(data.data));
+      dispatch(setUser(data.data));
+      navigate("/");
+    }
+  }, [isSuccess, navigate, user.accessToken, dispatch]);
 
   return (
     <>
@@ -85,7 +78,7 @@ export default function LoginForm() {
             <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
               Log In
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-6">
                 <label
                   htmlFor="email"
@@ -94,12 +87,10 @@ export default function LoginForm() {
                   Email
                 </label>
                 <input
-                  onChange={(e) => setEmail(e.target.value)}
-                  defaultValue={email}
                   type="email"
-                  id="email"
                   className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
                   placeholder="Enter your email"
+                  {...register("email")}
                 />
               </div>
               <div className="mb-6">
@@ -110,15 +101,13 @@ export default function LoginForm() {
                   Password
                 </label>
                 <input
-                  onChange={(e) => setPassword(e.target.value)}
-                  defaultValue={password}
                   type="password"
-                  id="password"
                   className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
                   placeholder="Enter your password"
+                  {...register("password")}
                 />
               </div>
-              {isLoading ? (
+              {/* {isLoading ? (
                 <button
                   disabled
                   className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition-colors"
@@ -132,7 +121,13 @@ export default function LoginForm() {
                 >
                   Login
                 </button>
-              )}
+              )} */}
+              <button
+                type="submit"
+                className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition-colors"
+              >
+                Login
+              </button>
               <p className="text-gray-700 text-md mt-4">
                 have not account?{" "}
                 <Link to="/signup">

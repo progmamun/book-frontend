@@ -4,8 +4,8 @@ import userReducer from "./features/user/userSlice";
 
 const store = configureStore({
   reducer: {
+    user: userReducer,
     [api.reducerPath]: api.reducer,
-    users: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
