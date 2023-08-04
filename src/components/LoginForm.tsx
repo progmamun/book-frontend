@@ -30,15 +30,15 @@ export default function LoginForm() {
   };
 
   useEffect(() => {
-    if (user.accessToken) {
-      navigate("/");
-    }
     if (isSuccess) {
       localStorage.setItem("user", JSON.stringify(data.data));
       dispatch(setUser(data.data));
       navigate("/");
     }
-  }, [isSuccess, navigate, user.accessToken, dispatch, data.data]);
+    if (user.accessToken) {
+      navigate("/");
+    }
+  }, [isSuccess, navigate, user.accessToken, dispatch]);
 
   return (
     <>

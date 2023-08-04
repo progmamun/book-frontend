@@ -12,25 +12,27 @@ import {
   useBookDetailsQuery,
   useUpdateBookMutation,
 } from "../redux/features/book/bookApi";
+import { toast } from "react-toastify";
+
 type FormValues = {
   title?: string;
   author?: string;
   genre?: string;
-  publicationDate?: string;
+  publicationYear?: string;
 };
 
 export default function EditBook() {
   const { register, handleSubmit } = useForm<FormValues>();
 
   const navigate = useNavigate();
-  const { slug } = useParams<{ slug: any }>();
-  const { data, isLoading, isError } = useBookDetailsQuery(slug);
+  const { id } = useParams<{ id: any }>();
+  const { data, isLoading, isError } = useBookDetailsQuery(id);
 
   //   console.log(data);
-  const [updateBook, { isSuccess, error }] = useUpdateBookMutation();
+  const [updateBook, { isSuccess }] = useUpdateBookMutation();
   const onSubmit: SubmitHandler<FormValues> = (formData) => {
     console.log(formData);
-    updateBook({ slug, body: formData });
+    updateBook({ id, body: formData });
   };
 
   useEffect(() => {
@@ -41,10 +43,10 @@ export default function EditBook() {
       <p>something went wrong. please try to reload the page.!!</p>;
     }
     if (isSuccess) {
-      navigate("/");
+      toast.success("Book update success.");
+      navigate("/all-book");
     }
-    console.log(error);
-  }, [isLoading, isSuccess, error, navigate, isError]);
+  }, [isLoading, isSuccess, navigate, isError]);
 
   console.log(data);
   return (
@@ -79,8 +81,8 @@ export default function EditBook() {
             className="input input-bordered input-primary w-full "
             type="text"
             placeholder="Publication Year"
-            defaultValue={data?.data?.publicationDate}
-            {...register("publicationDate", { valueAsNumber: true })}
+            defaultValue={data?.data?.publicationYear}
+            {...register("publicationYear")}
           />
 
           <input className="btn btn-primary" type="submit" />

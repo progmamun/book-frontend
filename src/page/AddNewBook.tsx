@@ -16,7 +16,7 @@ type FormValues = {
   title: string;
   author: string;
   genre: string;
-  publicationDate: string;
+  publicationYear: string;
   email: string;
 };
 
@@ -35,12 +35,12 @@ export default function AddNewBook() {
 
   const { register, handleSubmit } = useForm<FormValues>();
   const navigate = useNavigate();
-  const [createBook, { isSuccess, isError, error }] = useCreateBookMutation();
+  const [createBook, { isSuccess, isError }] = useCreateBookMutation();
   const onSubmit: SubmitHandler<FormValues> = (formData) => {
     formData.email = email;
     console.log(formData);
     createBook(formData);
-    console.log(error, isError);
+    // console.log(error, isError);
   };
 
   useEffect(() => {
@@ -48,8 +48,8 @@ export default function AddNewBook() {
       toast.success("New Book Added Successfully");
       navigate("/all-book");
     }
-    console.log(error, isError);
-  }, [error, isError, isSuccess, navigate]);
+    console.log(isError);
+  }, [isError, isSuccess, navigate]);
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <div className="container">
@@ -80,7 +80,7 @@ export default function AddNewBook() {
             className="input input-bordered input-primary w-full "
             type="text"
             placeholder="Publication Year"
-            {...register("publicationDate")}
+            {...register("publicationYear")}
           />
           <input type="hidden" value={email} {...register("email")} />
           <input className="btn btn-primary" type="submit" />

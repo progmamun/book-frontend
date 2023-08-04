@@ -5,6 +5,7 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://book-catalog-ebon.vercel.app/api/v1/",
+    // baseUrl: "http://localhost:5000/api/v1/",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).user.accessToken;
       if (token) {
@@ -13,6 +14,6 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["addNewBook", "bookDetails", "deleteBook", "bookReview"],
+  tagTypes: ["Books", "addNewBook", "bookDetails", "deleteBook", "bookReview"],
   endpoints: () => ({}),
 });

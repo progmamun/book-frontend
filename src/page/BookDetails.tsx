@@ -15,43 +15,33 @@ import {
 } from "../redux/features/book/bookApi";
 import { useAppSelector } from "../redux/hook";
 import moment from "moment";
-import jwt_decode from "jwt-decode";
 
 const BookDetails = () => {
   const user = useAppSelector((state) => state.user);
 
-  const decodedToken: any = isStringNonNull(user.accessToken)
-    ? jwt_decode(user.accessToken)
-    : null;
-
-  // Type guard to check if a value is a non-null string
-  function isStringNonNull(value: any): value is string {
-    return typeof value === "string" && value !== null;
-  }
-  // console.log(decodedToken);
-  const email = decodedToken.userEmail;
-  console.log(email);
-
   const [review, setReview] = useState("");
-  const { slug } = useParams<{ slug: any }>();
-  const { data, isLoading } = useBookDetailsQuery(slug);
+  const { id } = useParams<{ id: any }>();
+  const { data, isLoading } = useBookDetailsQuery(id);
+  console.log(data, "single book data");
 
-  const [deleteBook, { isSuccess }] = useDeleteBookMutation(data?.data?.slug);
+  const [deleteBook, { isSuccess }] = useDeleteBookMutation(data?.data?.id);
 
-  const [postReview, { error }] = usePostReviewMutation();
+  const [postReview] = usePostReviewMutation();
   // console.log(user.accessToken, user.accessToken.email);
 
   const navigate = useNavigate();
+
   const handleDelete = () => {
     const sure = confirm("Are you Sure?");
     if (sure) {
-      deleteBook(data?.data?.slug);
+      deleteBook(data?.data?.id);
     }
   };
+
   const postReviewHandle = (e: any) => {
     e.preventDefault();
     postReview({
-      slug,
+      id,
       body: {
         email: user.email,
         review,
@@ -65,23 +55,22 @@ const BookDetails = () => {
     }
     if (isSuccess) {
       toast.success("Book Deleted Successfully");
-      navigate("/");
+      navigate("/all-book");
     }
-    console.log(error);
-  }, [isLoading, isSuccess, error, navigate]);
+  }, [isLoading, isSuccess, navigate]);
 
   return (
     <div className="container">
       <div className="grid grid-cols-2 gap-6">
         <div className="col-span-2 flex gap-3 justify-end">
-          {email && (
+          {user.accessToken && (
             <Link to="/add-new-book" className="btn">
               Add New Book
             </Link>
           )}
           {user.id === data?.data?.authorId && (
             <div className="flex gap-3">
-              <Link className="btn btn-secondary" to={`/edit-book/${slug}`}>
+              <Link className="btn btn-secondary" to={`/edit-book/${id}`}>
                 Edit Book
               </Link>
               <button onClick={handleDelete} className="btn btn-warning">
@@ -138,11 +127,11 @@ const BookDetails = () => {
           <h2 className="text-3xl mt-4 font-semibold">Reviews : </h2>
         </div>
         <div className="flex flex-col gap-4">
-          {data?.data?.reveiws ? (
-            data?.data?.reveiws.map((item: any) => (
+          {data?.data?.reviews ? (
+            data?.data?.reviews.map((review: any, index: number) => (
               <div
-                key={item.review}
-                className="border flex gap-2 p-2 rounded-md bg-white"
+                key={index}
+                className="border flex gap-2 p-2 rounded-md text-white"
               >
                 <img
                   className="self-start"
@@ -152,8 +141,8 @@ const BookDetails = () => {
                   alt=""
                 />
                 <div>
-                  <h2 className="text-xl font-semibold">{item.name}</h2>
-                  <p>{item.review}</p>
+                  <h2 className="text-xl font-semibold">{review?.name}</h2>
+                  <p>{review}</p>
                 </div>
               </div>
             ))
